@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% from 'components/registration_info.html' import registration_block %}
+{% from 'components/voting_info.html' import voting_block %}
+{% from 'components/address_block.html' import address_block %}
+
+{% block content %}
+<div class="results-blocks">
+    {% if results|length == 0 %}
+
+    <h1>There are no upcoming elections in this area</h1>
+    {% else %}
+    <h1>{{ results|length }} Upcoming Election{% if results|length > 1 %}s{% endif %} in Your Area!</h1>
+    <table>
+        {% for result in results %}
+        <tr>
+            <a href={{ result['website'] }}><h2>{{ result['description'] }}</h2></a>
+            <div>Date: {{ result['date']|dateformat }}</div>
+            <div><a href={{ result['polling-place-url-shortened'] }}>Find your polling place </a></div>
+            <div>
+                <h2> How to Vote: </h2>
+                {% for division in result['district-divisions'] %}
+                    {% for voting_method in division['voting-methods']|sort(attribute='primary', reverse=True) %}
+                        {{ voting_block(voting_method) }}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            <div>
+                <h2> How to Register: </h2>
+                {% for division in result['district-divisions'] %}
+                    {% for registration_method in division['voter-registration-methods'] %}
+                        {{ registration_block(registration_method) }}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!--
+Formats an address into postal format
+Address 1
+Address 2
+City, State ZIP
+
+input: dict with optional keys of [street_1, street_2, city, state, zip]
+output: formatted address
+
+--->
+{% macro address_block(address)%}
+<p>
+    {{ address['street_1'] }}
+    {% if address['street_1'] %} <br> {% endif %}
+    {{ address['street_2'] }}
+    {% if address['street_2'] %} <br> {% endif %}
+    {{ address['city'] }}{% if address['city'] and address['state'] %}, {% endif %}{{ address['state'] }} {{ address['zip'] }}
+</p>
+{%- endmacro %}

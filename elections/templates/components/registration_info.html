@@ -1,0 +1,34 @@
+<!--
+Takes registration info from a call to the turbovote API and formats it based on the method
+
+input: dict from turbovote API, entry in 'voter-registration-methods' section
+output: formatted registration info
+
+--->
+{% macro registration_block(registration_method)%}
+<div class="registration-block">
+    {% if registration_method['type'] == 'by-mail' %}
+    <h3>By Mail
+        {% if registration_method['deadline-postmarked'] %}
+            (by {{registration_method['deadline-postmarked']|dateformat }})
+        {% endif %}
+    </h3>
+    <p>
+        {{ registration_method['instructions']['idnumber'] }}
+        <br><br>
+        {{ registration_method['instructions']['signature'] }}
+    </p>
+
+    {% elif registration_method['type'] == 'online' %}
+    <h3><a href={{ registration_method['url'] }}>Online</a>
+        {% if registration_method['deadline-online'] %}
+            (by {{registration_method['deadline-online']|dateformat }})
+        {% endif %}
+    </h3>
+    <p>
+        {{ registration_method['instructions']['registration'] }}
+    </p>
+
+    {% endif %}
+</div>
+{%- endmacro %}

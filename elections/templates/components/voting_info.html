@@ -1,0 +1,30 @@
+<!--
+Takes voting info from a call to the turbovote API and formats it based on the method
+
+input: dict from turbovote API, entry in 'voting-methods' section
+output: formatted voting method info
+
+--->
+{% macro voting_block(voting_method)%}
+<div class="voting-block">
+    {% if voting_method['type'] == 'by-mail' %}
+    <h3>By Mail
+    {% if voting_method['ballot-request-deadline-received'] %}
+        (by {{voting_method['ballot-request-deadline-received']|dateformat }})
+    {% endif %}
+    </h3>
+    An excuse is {% if not voting_method['excuse-required'] %}not {% endif %} required
+
+    {% elif voting_method['type'] == 'early-voting' %}
+    <h3>Early Voting</h3>
+    An excuse is {% if not voting_method['excuse-required'] %}not {% endif %} required
+
+    {% elif voting_method['type'] == 'in-person' %}
+    <h3>In Person</h3>
+    <p>
+        {{ voting_method['instructions']['voting-id'] }}
+    </p>
+    {% endif %}
+</div>
+{%- endmacro %}
+
